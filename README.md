@@ -66,9 +66,9 @@ The icon source is `assets/icon.svg`. The 128 px store export has 96 px artwork 
 
 ## Project structure
 
-Built with TypeScript, [WXT](https://wxt.dev) and [React](https://react.dev).
+Built with zero-dependency TypeScript and [WXT](https://wxt.dev).
 
-React is loaded only by the popup. Content scripts and the background worker stay framework-free, and slider settings are saved at most once per animation frame.
+Both the popup and content scripts stay framework-free, and slider settings are saved at most once per animation frame.
 
 | Path | Contents |
 |---|---|

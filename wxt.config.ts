@@ -2,10 +2,9 @@ import { defineConfig } from 'wxt';
 
 export default defineConfig({
   imports: false,
-  // Only the popup loads React; content scripts stay framework-free.
+  // Zero-framework popup and content scripts; browsers supporting Vellum's
+  // relative colors already support modulepreload.
   vite: () => ({
-    oxc: { jsx: { runtime: 'automatic', importSource: 'react' } },
-    // Browsers supporting Vellum's relative colors already support modulepreload.
     build: { modulePreload: { polyfill: false } },
   }),
   manifest: {

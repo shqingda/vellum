@@ -8,9 +8,14 @@ export const toLinear = (v: number) => (v <= 0.04045 ? v / 12.92 : ((v + 0.055) 
 /** Linear light as an sRGB component, 0–1. */
 export const fromLinear = (v: number) => (v <= 0.0031308 ? 12.92 * v : 1.055 * v ** (1 / 2.4) - 0.055);
 
+const LINEAR_LUT = Float64Array.from({ length: 256 }, (_, i) => toLinear(i / 255));
+const linearByte = (v: number) => ((v | 0) === v && v >= 0 && v <= 255 ? LINEAR_LUT[v] : toLinear(v / 255));
+
 /** OKLCH of an sRGB color of 0–255 components. */
 export function rgbToOklch(r8: number, g8: number, b8: number): OKLCH {
-  const [r, g, b] = [r8, g8, b8].map((v) => toLinear(v / 255));
+  const r = linearByte(r8);
+  const g = linearByte(g8);
+  const b = linearByte(b8);
   const l_ = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
   const m_ = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
   const s_ = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
@@ -41,19 +46,32 @@ export function oklchToHex({ l, c, h }: OKLCH): string {
     .join('')}`;
 }
 
+const COLOR_CACHE_MAX = 256;
+const colorCache = new Map<string, OKLCH | null>();
+
 /**
  * A color as getComputedStyle reports it, rgb() or oklch(), in OKLCH, if it
  * is opaque enough to count: null for transparent and half-transparent
  * colors, and for color spaces it does not read.
  */
 export function parseColor(s: string): OKLCH | null {
+  if (!s || s === 'rgba(0, 0, 0, 0)' || s === 'transparent') return null;
+  const cached = colorCache.get(s);
+  if (cached !== undefined) return cached;
+  let parsed: OKLCH | null = null;
   const o = /^oklch\(([\d.]+)(%?) ([\d.]+) ([\d.]+|none)(?: \/ ([\d.]+))?/.exec(s);
   if (o) {
-    if (o[5] !== undefined && Number(o[5]) < 0.5) return null;
-    return { l: Number(o[1]) / (o[2] ? 100 : 1), c: Number(o[3]), h: Number(o[4]) || 0 };
+    if (o[5] === undefined || Number(o[5]) >= 0.5) {
+      parsed = { l: Number(o[1]) / (o[2] ? 100 : 1), c: Number(o[3]), h: Number(o[4]) || 0 };
+    }
+  } else {
+    const m = /^rgba?\(([^)]+)\)/.exec(s);
+    if (m) {
+      const [r, g, b, a = 1] = m[1].split(/[\s,/]+/).filter(Boolean).map(Number);
+      if (a >= 0.5) parsed = rgbToOklch(r, g, b);
+    }
   }
-  const m = /^rgba?\(([^)]+)\)/.exec(s);
-  if (!m) return null;
-  const [r, g, b, a = 1] = m[1].split(/[\s,/]+/).filter(Boolean).map(Number);
-  return a < 0.5 ? null : rgbToOklch(r, g, b);
+  if (colorCache.size >= COLOR_CACHE_MAX) colorCache.clear();
+  colorCache.set(s, parsed);
+  return parsed;
 }

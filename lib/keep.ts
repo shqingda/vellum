@@ -32,7 +32,30 @@ function mark(el: Element) {
  * scripts and the like. Skipping them leaves out most of what pages add, as
  * a feed's many icons.
  */
-const SKIP = new Set(['svg', 'SCRIPT', 'STYLE', 'LINK', 'META', 'TEMPLATE', 'NOSCRIPT', 'IMG', 'VIDEO', 'CANVAS', 'IFRAME', 'BR']);
+const SKIP = new Set([
+  'svg',
+  'SVG',
+  'SCRIPT',
+  'STYLE',
+  'LINK',
+  'META',
+  'TEMPLATE',
+  'NOSCRIPT',
+  'IMG',
+  'VIDEO',
+  'CANVAS',
+  'IFRAME',
+  'BR',
+  'HR',
+  'WBR',
+  'SOURCE',
+  'TRACK',
+  'AUDIO',
+  'PICTURE',
+  'OBJECT',
+  'EMBED',
+  'HEAD',
+]);
 
 const skipped = (el: Element) => SKIP.has(el.tagName);
 

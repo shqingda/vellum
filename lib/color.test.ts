@@ -19,7 +19,16 @@ describe('parseColor', () => {
 
   it('leaves out what is too transparent to count, and what it cannot read', () => {
     expect(parseColor('rgba(0, 0, 0, 0)')).toBeNull();
+    expect(parseColor('transparent')).toBeNull();
     expect(parseColor('oklch(0.9 0.02 250 / 0.2)')).toBeNull();
     expect(parseColor('color(display-p3 1 1 1)')).toBeNull();
+  });
+
+  it('returns consistent results from the parse cache', () => {
+    const first = parseColor('rgb(180, 190, 200)');
+    const second = parseColor('rgb(180, 190, 200)');
+    expect(first).toEqual(second);
+    expect(parseColor('invalid-color')).toBeNull();
+    expect(parseColor('invalid-color')).toBeNull();
   });
 });

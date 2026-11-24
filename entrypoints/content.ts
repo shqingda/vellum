@@ -30,7 +30,7 @@ export default defineContentScript({
 /** How long turning on or off, or a page turning light or dark, eases. */
 const FADE_MS = 700;
 /** How often a visible page is looked at again, for themes switched in place. */
-const RECHECK_MS = 1500;
+const RECHECK_MS = 4000;
 
 /** How far the background must move before the text follows. */
 const BG_STEP = 0.04;
@@ -232,9 +232,20 @@ function start() {
   // attributes change; only the page itself looks again and again, and
   // answers the popup.
   if (window !== window.top) return;
-  setInterval(() => {
+  let timer = 0;
+  const syncTimer = () => {
+    if (document.visibilityState === 'visible') {
+      if (!timer) timer = window.setInterval(look, RECHECK_MS);
+    } else if (timer) {
+      clearInterval(timer);
+      timer = 0;
+    }
+  };
+  syncTimer();
+  document.addEventListener('visibilitychange', () => {
+    syncTimer();
     if (document.visibilityState === 'visible') look();
-  }, RECHECK_MS);
+  });
 
   browser.runtime.onMessage.addListener((msg: unknown, _sender, reply) => {
     if ((msg as { type?: string })?.type !== 'mlw:state') return;

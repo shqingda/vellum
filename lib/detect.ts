@@ -10,16 +10,28 @@ import { parseColor } from './color';
  * background of it or its ancestors, else the canvas. A background image
  * counts as unknown, as a photo behind text can be either.
  */
-function backgroundLightness(el: Element | null, canvas: number): number | null {
+function backgroundLightness(el: Element | null, canvas: number, cache: Map<Element, number | null>): number | null {
+  const trail: Element[] = [];
+  let result = canvas as number | null;
   for (let e = el; e; e = e.parentElement) {
+    if (cache.has(e)) {
+      result = cache.get(e)!;
+      break;
+    }
+    trail.push(e);
     const cs = getComputedStyle(e);
     const c = parseColor(cs.backgroundColor);
-    if (c) return c.l;
+    if (c) {
+      result = c.l;
+      break;
+    }
     if (cs.backgroundImage !== 'none' && !cs.backgroundImage.startsWith('linear-gradient') && e !== document.body) {
-      return null;
+      result = null;
+      break;
     }
   }
-  return canvas;
+  for (const e of trail) cache.set(e, result);
+  return result;
 }
 
 /** The canvas: html's or body's background, else what color-scheme paints. */
@@ -56,19 +68,23 @@ export function lookAtPage(): PageLook | null {
   const h = innerHeight;
   if (w === 0 || h === 0) return null;
   const canvas = canvasLightness();
+  const cache = new Map<Element, number | null>();
   const samples: { l: number; weight: number }[] = [];
+  let total = 0;
+  let darkWeight = 0;
   for (let i = 0; i < 5; i++) {
     for (let j = 0; j < 5; j++) {
       const x = ((i + 0.5) / 5) * w;
       const y = ((j + 0.5) / 5) * h;
-      const l = backgroundLightness(document.elementFromPoint(x, y), canvas);
+      const l = backgroundLightness(document.elementFromPoint(x, y), canvas, cache);
       if (l === null) continue;
-      samples.push({ l, weight: i > 0 && i < 4 && j > 0 && j < 4 ? 2 : 1 });
+      const weight = i > 0 && i < 4 && j > 0 && j < 4 ? 2 : 1;
+      samples.push({ l, weight });
+      total += weight;
+      if (l < DARK_BELOW) darkWeight += weight;
     }
   }
   if (samples.length === 0) return { dark: canvas < DARK_BELOW, bg: canvas };
-  const total = samples.reduce((n, s) => n + s.weight, 0);
-  const dark = samples.filter((s) => s.l < DARK_BELOW).reduce((n, s) => n + s.weight, 0);
   samples.sort((a, b) => a.l - b.l);
   let acc = 0;
   let bg = samples[samples.length - 1].l;
@@ -79,5 +95,5 @@ export function lookAtPage(): PageLook | null {
       break;
     }
   }
-  return { dark: dark / total >= 0.5, bg };
+  return { dark: darkWeight / total >= 0.5, bg };
 }

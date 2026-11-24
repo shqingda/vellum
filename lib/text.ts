@@ -7,6 +7,8 @@ import { KEEP_ATTR } from './keep';
 /** How many text nodes a look at the text reads at most. */
 const TEXT_NODES = 3000;
 
+const IGNORE = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEMPLATE', 'SVG', 'svg']);
+
 /**
  * The page's main bright text: of the text colors above lightness above,
  * the one the most characters show, leaving out text that keeps its color.
@@ -15,7 +17,17 @@ const TEXT_NODES = 3000;
 export function mainText(above: number): OKLCH | null {
   if (!document.body) return null;
   const counts = new Map<Element, number>();
-  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT, {
+    acceptNode: (n) => {
+      if (n.nodeType === Node.ELEMENT_NODE) {
+        const el = n as Element;
+        return el.hasAttribute(KEEP_ATTR) || IGNORE.has(el.tagName)
+          ? NodeFilter.FILTER_REJECT
+          : NodeFilter.FILTER_SKIP;
+      }
+      return NodeFilter.FILTER_ACCEPT;
+    },
+  });
   for (let n = 0; n < TEXT_NODES && walker.nextNode(); n++) {
     const node = walker.currentNode;
     const el = node.parentElement;
@@ -24,7 +36,6 @@ export function mainText(above: number): OKLCH | null {
   }
   const byColor = new Map<string, number>();
   for (const [el, len] of counts) {
-    if (el.closest(`[${KEEP_ATTR}]`)) continue;
     const color = getComputedStyle(el).color;
     byColor.set(color, (byColor.get(color) ?? 0) + len);
   }
