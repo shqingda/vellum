@@ -5,9 +5,9 @@ export type LangSetting = 'auto' | 'zh' | 'en';
 export type Lang = 'zh' | 'en';
 
 const zh = {
-  enable: '启用 Mellow',
+  enable: '启用 Vellum',
   thisPage: '当前页面',
-  unavailable: '此页面无法使用 Mellow',
+  unavailable: '此页面无法使用 Vellum',
   reloadToApply: '刷新页面后生效',
   detecting: '正在识别',
   darkPage: '深色页面',
@@ -42,15 +42,15 @@ const zh = {
 export type Strings = typeof zh;
 
 const en: Strings = {
-  enable: 'Turn on Mellow',
+  enable: 'Turn on Vellum',
   thisPage: 'This page',
-  unavailable: 'Mellow can’t run on this page',
+  unavailable: 'Vellum can’t run on this page',
   reloadToApply: 'Reload to apply',
   detecting: 'Detecting',
   darkPage: 'Dark page',
   lightPage: 'Light page',
   off: ' · Off',
-  openedBefore: 'This page was opened before Mellow was installed or updated.',
+  openedBefore: 'This page was opened before Vellum was installed or updated.',
   reload: 'Reload',
   thisSite: 'This site',
   modeAuto: 'Auto',

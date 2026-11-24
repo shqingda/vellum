@@ -1,5 +1,5 @@
 // Colors in OKLCH, where L is perceptual lightness: 0 black, 1 white. Every
-// lightness Mellow reads or sets is this L.
+// lightness Vellum reads or sets is this L.
 
 export type OKLCH = { l: number; c: number; h: number };
 

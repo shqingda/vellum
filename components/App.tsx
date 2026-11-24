@@ -249,7 +249,7 @@ export function App() {
         <span className="shortcut" title={t.shortcut} aria-label={t.shortcut}>
           <kbd>{navigator.platform.includes('Mac') ? '⌥' : 'Alt'}</kbd>
           <kbd>⇧</kbd>
-          <kbd>M</kbd>
+          <kbd>V</kbd>
         </span>
       </footer>
     </main>
@@ -261,7 +261,7 @@ function Wordmark() {
   return (
     <h1 className="wordmark">
       <img src="/icon/96.png" width="28" height="28" alt="" />
-      <span>Mellow</span>
+      <span>Vellum</span>
     </h1>
   );
 }

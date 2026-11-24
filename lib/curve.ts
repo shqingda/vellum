@@ -1,4 +1,4 @@
-// The curve mellow applies to the lightness of text, in OKLCH, where L is
+// The curve Vellum applies to the lightness of text, in OKLCH, where L is
 // perceptual: 0 black, 1 white. Lightness up to the knee stays as it is;
 // above it, a rational soft clip
 //

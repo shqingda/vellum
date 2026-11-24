@@ -1,5 +1,5 @@
 {
-  "extName": { "message": "Mellow" },
+  "extName": { "message": "Vellum" },
   "extDescription": { "message": "Soften bright text on dark pages. Fine-tune brightness for each site, with all settings stored locally." },
-  "toggleSite": { "message": "Turn Mellow on or off for this site" }
+  "toggleSite": { "message": "Turn Vellum on or off for this site" }
 }

@@ -1,4 +1,4 @@
-# Mellow
+# Vellum
 
 A Chrome extension that lowers the lightness of bright text on dark pages. Backgrounds and images are not changed; SVG icons that inherit the text color may soften with the text.
 
@@ -38,11 +38,11 @@ The popup provides:
 - **Colored text**: how much colored text is adjusted.
 - Interface language: Auto (follows the browser), Chinese or English.
 
-<kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>M</kbd> turns Mellow on or off for the current site.
+<kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd> turns Vellum on or off for the current site.
 
 ## Privacy
 
-Mellow makes no network requests and has no analytics. It processes page styles, text-node lengths and the current site's hostname locally to adjust brightness. Settings and per-site preferences are saved in `chrome.storage.local`, without browser-account sync. Page text is not stored or transmitted.
+Vellum makes no network requests and has no analytics. It processes page styles, text-node lengths and the current site's hostname locally to adjust brightness. Settings and per-site preferences are saved in `chrome.storage.local`, without browser-account sync. Page text is not stored or transmitted.
 
 The extension requests `storage` and `activeTab`, and declares a content script for `<all_urls>` so softening can run automatically on supported pages. See [PRIVACY.md](PRIVACY.md) for the full privacy policy.
 
@@ -58,7 +58,7 @@ pnpm typecheck  # type-check
 
 ## Release
 
-Run `pnpm test`, `pnpm typecheck` and `pnpm zip`. The version in `package.json` becomes the extension version; version 1.0.0 produces `.output/mellow-1.0.0-chrome.zip`, ready to upload to the Chrome Web Store. To install it locally, extract the ZIP and load the extracted folder from `chrome://extensions`.
+Run `pnpm test`, `pnpm typecheck` and `pnpm zip`. The version in `package.json` becomes the extension version; version 1.0.0 produces `.output/vellum-1.0.0-chrome.zip`, ready to upload to the Chrome Web Store. To install it locally, extract the ZIP and load the extracted folder from `chrome://extensions`.
 
 [Chrome Web Store copy](store/README.md) includes English and Simplified Chinese descriptions, permission explanations, privacy disclosures, reviewer instructions and release notes. The public privacy policy is [PRIVACY.md](PRIVACY.md).
 

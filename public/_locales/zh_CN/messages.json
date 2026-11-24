@@ -1,5 +1,5 @@
 {
-  "extName": { "message": "Mellow" },
+  "extName": { "message": "Vellum" },
   "extDescription": { "message": "柔化深色网页上刺眼的亮字，按网站调节亮度，设置仅保存在本机。" },
-  "toggleSite": { "message": "在当前网站开启或关闭 Mellow" }
+  "toggleSite": { "message": "在当前网站开启或关闭 Vellum" }
 }

@@ -111,6 +111,8 @@ it('keeps switches, site modes, language and reset working with saved settings',
   });
   expect(container.querySelector('input')?.value).toBe('0.82');
   expect(container.querySelector('.wordmark img')?.getAttribute('src')).toBe('/icon/96.png');
+  expect(container.querySelector('.wordmark span')?.textContent).toBe('Vellum');
+  expect(container.querySelector('.shortcut kbd:last-child')?.textContent).toBe('V');
 });
 
 it('updates preview curve parameters immediately and disables softening with the switch', async () => {
@@ -162,7 +164,7 @@ it('cancels a pending page scan and removes the storage listener on unmount', as
 
 it.each([
   ['https://example.com', 'Reload to apply', true],
-  ['chrome://extensions', 'Mellow can’t run on this page', false],
+  ['chrome://extensions', 'Vellum can’t run on this page', false],
 ] as const)('keeps controls available on %s when the content script is missing', async (url, status, reload) => {
   const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
   await browser.tabs.update(tab.id!, { url });

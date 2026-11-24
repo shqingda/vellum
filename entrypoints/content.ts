@@ -50,7 +50,7 @@ function start() {
   let fade: { anim: Animation; from: number } | null = null;
 
   const style = document.createElement('style');
-  style.id = 'mellow-style';
+  style.id = 'vellum-style';
 
   /**
    * The style: the parameters as custom properties on the root, and the
